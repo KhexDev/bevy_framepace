@@ -1,4 +1,5 @@
-use bevy::{color::palettes, prelude::*};
+use bevy::{color::palettes, core_pipeline::tonemapping::Tonemapping, prelude::*};
+use bevy_window::Window;
 
 fn main() {
     App::new()
@@ -34,7 +35,7 @@ fn update_ui(
     mut text: Query<&mut Text, With<EnableText>>,
     settings: Res<bevy_framepace::FramepaceSettings>,
 ) {
-    text.single_mut().sections[1].value = format!("{}", settings.limiter);
+    // text.single_mut().sections[1].value = format!("{}", settings.limiter);
 }
 
 pub fn update_cursor(windows: Query<&Window>, mut gizmos: Gizmos) {
@@ -49,37 +50,50 @@ pub fn update_cursor(windows: Query<&Window>, mut gizmos: Gizmos) {
 
 /// set up the scene
 fn setup(mut commands: Commands, mut windows: Query<&mut Window>) {
-    windows.iter_mut().next().unwrap().cursor.icon = CursorIcon::Crosshair;
-    commands.spawn((Camera2dBundle {
-        camera: Camera {
+    // windows.iter_mut().next().unwrap().cursor.icon = CursorIcon::Crosshair;
+    // commands.spawn((Camera2dBundle {
+    //     camera: Camera {
+    //         order: 10,
+    //         ..default()
+    //     },
+    //     tonemapping: bevy::core_pipeline::tonemapping::Tonemapping::None,
+    //     ..default()
+    // },));
+
+    commands.spawn((
+        Camera2d::default(),
+        Camera {
             order: 10,
             ..default()
         },
-        tonemapping: bevy::core_pipeline::tonemapping::Tonemapping::None,
-        ..default()
-    },));
-    commands.spawn((Camera3dBundle::default(),));
-    // UI
-    let style = TextStyle {
-        font_size: 60.0,
-        color: Color::WHITE,
-        ..default()
-    };
-    commands.spawn((
-        TextBundle::from_sections(vec![
-            TextSection {
-                value: "Frame pacing: ".to_string(),
-                style: style.clone(),
-            },
-            TextSection {
-                value: "".to_string(),
-                style: style.clone(),
-            },
-            TextSection {
-                value: "\n[press space]".to_string(),
-                style,
-            },
-        ]),
-        EnableText,
+        Tonemapping::None,
     ));
+
+    commands.spawn(Camera2d::default());
+
+    // commands.spawn((Camera3dBundle::default(),));
+
+    // UI
+    // let style = TextStyle {
+    //     font_size: 60.0,
+    //     color: Color::WHITE,
+    //     ..default()
+    // };
+    // commands.spawn((
+    //     TextBundle::from_sections(vec![
+    //         TextSection {
+    //             value: "Frame pacing: ".to_string(),
+    //             style: style.clone(),
+    //         },
+    //         TextSection {
+    //             value: "".to_string(),
+    //             style: style.clone(),
+    //         },
+    //         TextSection {
+    //             value: "\n[press space]".to_string(),
+    //             style,
+    //         },
+    //     ]),
+    //     EnableText,
+    // ));
 }
